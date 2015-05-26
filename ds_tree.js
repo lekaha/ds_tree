@@ -168,7 +168,8 @@ var AVLTree = (function (_super) {
         _super.apply(this, arguments);
     }
     AVLTree.prototype.insert = function (value) {
-        var node = _super.prototype.insert.call(this, value);
+        var insertedNode = _super.prototype.insert.call(this, value);
+        var node = insertedNode;
         while (null != node.parent) {
             var f = this.balanceFactor(node.parent);
             if (f > 1) {
@@ -188,11 +189,15 @@ var AVLTree = (function (_super) {
                 this.leftRotate(N);
             }
             node = node.parent;
+            if (null == node) {
+                break;
+            }
         }
-        return node;
+        return insertedNode;
     };
     AVLTree.prototype.remove = function (value) {
-        var node = _super.prototype.remove.call(this, value);
+        var removedNode = _super.prototype.remove.call(this, value);
+        var node = removedNode;
         while (null != node.parent) {
             var f = this.balanceFactor(node.parent);
             if (f > 1) {
@@ -212,8 +217,11 @@ var AVLTree = (function (_super) {
                 this.leftRotate(N);
             }
             node = node.parent;
+            if (null == node) {
+                break;
+            }
         }
-        return node;
+        return removedNode;
     };
     AVLTree.prototype.show = function () {
         var h = this.traverse(this.pRoot, 0);

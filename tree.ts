@@ -199,7 +199,8 @@ class BSTree<T> implements Tree {
 class AVLTree<T> extends BSTree<T> {
 
     insert(value: T): BNode {
-        var node: BNode = super.insert(value);
+        var insertedNode: BNode = super.insert(value);
+        var node: BNode = insertedNode;
         while(null != node.parent) {
             var f: number = this.balanceFactor(node.parent);
             if (f > 1) {
@@ -219,14 +220,19 @@ class AVLTree<T> extends BSTree<T> {
                 }
                 this.leftRotate(N);
             }
+
             node = node.parent;
+            if (null == node) {
+                break;
+            }
         }
 
-        return node;
+        return insertedNode;
     }
 
     remove(value: T): BNode {
-        var node: BNode = super.remove(value);
+        var removedNode: BNode = super.remove(value);
+        var node: BNode = removedNode;
         while(null != node.parent) {
             var f: number = this.balanceFactor(node.parent);
             if (f > 1) {
@@ -246,9 +252,13 @@ class AVLTree<T> extends BSTree<T> {
                 }
                 this.leftRotate(N);
             }
+
             node = node.parent;
+            if (null == node) {
+                break;
+            }
         }
-        return node
+        return removedNode
     }
 
     show() {
