@@ -53,6 +53,9 @@ var BSTree = (function () {
             this.pCmptor = defaultComparator;
         }
     }
+    BSTree.prototype.root = function () {
+        return this.pRoot;
+    };
     BSTree.prototype.insert = function (value) {
         if (null == this.pRoot) {
             this.pRoot = new BNode(value);
@@ -159,6 +162,9 @@ var BSTree = (function () {
             return node;
         }
         return node;
+    };
+    BSTree.prototype.iterator = function () {
+        return new BinaryTreeIterator(this);
     };
     return BSTree;
 })();
@@ -299,4 +305,39 @@ var AVLTree = (function (_super) {
     };
     return AVLTree;
 })(BSTree);
+/*
+This iterator uses BFS to tree.
+ */
+var BinaryTreeIterator = (function () {
+    function BinaryTreeIterator(tree) {
+        this.mTree = tree;
+        this.mQ = [];
+        this.init();
+    }
+    BinaryTreeIterator.prototype.hasNext = function () {
+        return this.mQ.length != 0;
+    };
+    BinaryTreeIterator.prototype.next = function () {
+        return this.mQ.shift();
+    };
+    BinaryTreeIterator.prototype.init = function () {
+        var node = this.mTree.root();
+        if (null != node) {
+            var stack = new Array();
+            stack.push(node);
+            while (stack.length != 0) {
+                var l = stack.length;
+                for (var i = 0; i < l; i++) {
+                    var n = stack.shift();
+                    this.mQ.push(n);
+                    if (n.left)
+                        stack.push(n.left);
+                    if (n.right)
+                        stack.push(n.right);
+                }
+            }
+        }
+    };
+    return BinaryTreeIterator;
+})();
 //# sourceMappingURL=ds_tree.js.map

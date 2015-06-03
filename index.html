@@ -24,7 +24,10 @@
         tree.insert(array[v]);
     }
 
-    tree.show();
+    var i = tree.iterator();
+    while(i.hasNext()) {
+        console.log(i.next());
+    }
     var r = tree.remove(1);
     console.log('index', 'result = ', r);
     tree.show();

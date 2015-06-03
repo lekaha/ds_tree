@@ -7,10 +7,17 @@ interface TNode {
     value: any;
 }
 
+interface Iterator {
+    hasNext():boolean;
+    next():any;
+}
+
 interface Tree {
     insert(value: any): TNode;
     find(value: any): TNode;
     remove(value: any): TNode;
+    root(): TNode;
+    iterator(): Iterator;
 }
 
 interface Comparator {
@@ -77,6 +84,10 @@ class BSTree<T> implements Tree {
         else {
             this.pCmptor = defaultComparator;
         }
+    }
+
+    root(): BNode {
+        return this.pRoot;
     }
 
     insert(value: T): BNode {
@@ -193,6 +204,10 @@ class BSTree<T> implements Tree {
         }
 
         return node;
+    }
+
+    iterator():Iterator {
+        return new BinaryTreeIterator<T>(this);
     }
 }
 
@@ -343,5 +358,45 @@ class AVLTree<T> extends BSTree<T> {
         }
 
         return level;
+    }
+}
+
+/*
+This iterator uses BFS to tree.
+ */
+class BinaryTreeIterator<T> implements Iterator {
+    protected mTree: BSTree<T>;
+    protected mQ: BNode[];
+
+    constructor(tree: BSTree<T>) {
+        this.mTree = tree;
+        this.mQ = [];
+        this.init();
+    }
+
+    hasNext() {
+        return this.mQ.length != 0;
+
+    }
+
+    next(): BNode {
+        return this.mQ.shift();
+    }
+
+    private init() {
+        var node:BNode = this.mTree.root();
+        if (null != node) {
+            var stack = new Array();
+            stack.push(node);
+            while(stack.length != 0) {
+                var l = stack.length;
+                for(var i = 0; i<l; i++) {
+                    var n = stack.shift();
+                    this.mQ.push(n);
+                    if (n.left) stack.push(n.left);
+                    if (n.right) stack.push(n.right);
+                }
+            }
+        }
     }
 }
